@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* Deep charcoal/brown base */
+  --main-background: 30 20% 8%;
+  --color-main-background: hsl(30 20% 8%);
+  --color-main-foreground: hsl(35 45% 85%);
+
+  --color-test-color: hsl(0 70% 50%);
+  --color-test-color2: oklch(60% 0.15 250);
+
+
+  /* Panel backgrounds */
+  --color-card: hsl(30 15% 6%);
+  --color-card-foreground: hsl(35 45% 85%);
+
+
+  --color-popover: hsl(30 15% 6%);
+  --color-popover-foreground: hsl(35 45% 85%);
+
+  /* Primary amber accent */
+  --color-primary: hsl(35 70% 55%);
+  --color-primary-foreground: hsl(30 20% 8%) ;
+
+  /* Secondary muted amber */
+  --color-secondary: hsl(30 25% 15%) ;
+  --color-secondary-foreground: hsl(35 45% 75%);
+
+  /* Muted elements */
+  --color-muted: hsl(30 15% 12%);
+  --color-muted-foreground: hsl(35 30% 50%);
+
+  /* Accent - bright amber highlight */
+  --color-accent: hsl(43 96% 56%);
+  --color-accent-foreground: hsl(30 20% 8%);
+
+  /* Hazard/warning */
+  --color-destructive: hsl(0 70% 50%);
+  --color-destructive-foreground: hsl(35 45% 90%);
+
+  /* Borders and inputs */
+  --color-border: hsl(35 40% 25%);
+  --color-border2: 35 40% 25%;
+
+  --color-input: hsl(30 20% 12%);
+  --color-ring: hsl(35 70% 55%);
+
+  /* Sidebar (data panel) */
+    --color-sidebar-background: hsl(30 18% 5%);
+    --color-sidebar-foreground: hsl(35 45% 80%);
+    --color-sidebar-primary: hsl(35 70% 55%);
+    --color-sidebar-primary-foreground: hsl(30 20% 8%);
+    --color-sidebar-accent: hsl(30 25% 12%);
+    --color-sidebar-accent-foreground: hsl(35 45% 80%);
+    --color-sidebar-border: hsl(35 30% 20%);
+    --color-sidebar-ring: hsl(35 70% 55%);
+
+  /* Custom retro colors */
+  --amber-glow: 35 80% 60%;
+  --color-amber-glow: hsl(35 80% 60%);
+  --color-terminal-green: hsl(120 100% 35%);
+  --color-space-void: hsl(220 30% 3%);
+
+  /* Main font */
+  --font-main: "JetBrains Mono", monospace;
+}
+
+@layer base {
+  body {
+    background: var(--color-main-background);
+    color: var(--color-main-foreground);
+    font-family: var(--font-main);
+  }
+}
+
+@layer utilities {
+
+  .text-glow {
+    
+    text-shadow: 0 0 10px hsl(var(--amber-glow) / 0.5),
+      0 0 20px hsl(var(--amber-glow) / 0.3),
+      0 0 30px hsl(var(--amber-glow) / 0.1);
+  }
+
+  .text-glow-subtle {
+    text-shadow: 0 0 8px var(--color-amber-glow);
+  }
+
+  .subtitle-text {
+    font-size: 0.875rem;
+    text-align: center;
+    color: hsl(var(--amber-glow));
+    text-shadow: 0 0 10px hsl(var(--amber-glow) / 0.5),
+      0 0 20px hsl(var(--amber-glow) / 0.3),
+      0 0 30px hsl(var(--amber-glow) / 0.1);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: opacity 300ms;
+  }
+
+  .label-text {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-muted-foreground);
+    margin-bottom: 0.125rem; 
+  }
+
+  .value-text {
+    font-size: 0.875rem; 
+    color: var(--color-main-foreground);
+    text-shadow: 0 0 8px var(--amber-glow) / 0.4;
+  }
+
+  .retro-panel {
+    position: relative;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+  }
+
+  .retro-panel::before,
+  .retro-panel::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: var(--color-primary);
+    border-style: solid;
+  }
+
+  .retro-panel::before {
+    top: 4px;
+    left: 4px;
+    border-width: 2px 0 0 2px;
+  }
+
+  .retro-panel::after {
+    top: 4px;
+    right: 4px;
+    border-width: 2px 2px 0 0;
+  }
+
+  .retro-panel-corners::before,
+  .retro-panel-corners::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: var(--color-primary);
+    border-style: solid;
+  }
+
+  .retro-panel-corners::before {
+    bottom: 4px;
+    left: 4px;
+    border-width: 0 0 2px 2px;
+  }
+
+  .retro-panel-corners::after {
+    bottom: 4px;
+    right: 4px;
+    border-width: 0 2px 2px 0;
+  }
+
+  .pulse-amber {
+    animation: pulse-amber 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-amber {
+    0%,
+    100% {
+      opacity: 0.4;
+      box-shadow: 0 0 4px var(--color-primary);
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 12px var(--color-primary);
+    }
+  }
+
+  @keyframes cursor-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+}
