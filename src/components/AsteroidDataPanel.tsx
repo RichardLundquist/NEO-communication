@@ -66,7 +66,7 @@ const AsteroidDataPanel = ({
       )}
 
       {/* Scrollable content */}
-      <div className={`${expanded ? 'flex-1 overflow-y-auto p-4 scrollbar-thin' : 'hidden'}`}>
+      <div className={`${expanded ? 'flex-1 overflow-y-auto p-4 custom-scrollbar' : 'hidden'}`}>
         {data && data.length > 0 ? (
           <>
             <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-4">

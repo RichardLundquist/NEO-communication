@@ -13,13 +13,15 @@ import { story1, story2, story3 } from "../assets/stories";
 import AsteroidDataPanel from "../components/AsteroidDataPanel";
 import type { Neo, RawNeoData } from "../types";
 import MobileNeoStrip from "../components/MobileNeoStrip";
-import { Asteroid } from "../components/3D/Asteroid";
 import { CameraTracker } from "../components/3D/CameraTracker";
 import { Subtitles } from "../components/Subtitles";
 import { splitIntoSubtitles } from "../utils/textUtils";
 import ErrorDialog from "../components/ErrorDialog";
+import { Head } from "../components/3D/Head";
 
 const MOCK_STORY_DELAY_MS = 1200;
+
+const HEAD_MODELS = ['/head.glb', '/head2.glb', '/head3.glb'];
 
 const openRouter = new OpenRouter({
   apiKey: import.meta.env.VITE_OPENROUTER_API_KEY,
@@ -57,6 +59,7 @@ const mockNeo = {
 
 export default function NeoCom() {
   const [selectedNeo, setSelectedNeo] = useState<Neo | null>(null);
+  const [headModel, setHeadModel] = useState(HEAD_MODELS[0]);
   const [neoList, setNeoList] = useState<Neo[] | undefined>(undefined);
   const [subtitles, setSubtitles] = useState<string[] | undefined>(undefined);
   const [dataState, setDataState] = useState<
@@ -64,6 +67,11 @@ export default function NeoCom() {
   >("loadingNASA");
 
   const useRealAIStory = import.meta.env.VITE_USE_REAL_AI === "true";
+
+  const audio = new Audio('/audio/090126.mp3');
+audio.loop = true;
+  audio.volume = 0.5; // optional: adjust volume
+
 
   const generateMockStory = useCallback(async () => {
     setDataState("loadingAI");
@@ -79,6 +87,7 @@ export default function NeoCom() {
 
     if (!selectedNeo) {
       setSelectedNeo(mockNeo);
+      setHeadModel(HEAD_MODELS[Math.floor(Math.random() * HEAD_MODELS.length)]);
     }
 
     setDataState("ok");
@@ -89,6 +98,14 @@ export default function NeoCom() {
     async (asteroid: Neo) => {
       setDataState("loadingAI");
       setSelectedNeo(asteroid);
+      setHeadModel(HEAD_MODELS[Math.floor(Math.random() * HEAD_MODELS.length)]);
+
+      audio.pause();
+    audio.currentTime = 0;
+
+      audio.play().catch((e) => {
+        console.warn("Audio playback failed:", e);
+      });
 
       try {
         if (useRealAIStory) {
@@ -245,11 +262,18 @@ export default function NeoCom() {
           <ErrorDialog generateMockStory={generateMockStory} />
         )}
 
-        <Canvas camera={{ position: [0, 0, 5], fov: 90 }}>
+        <Canvas shadows camera={{ position: [0, 0, 5], fov: 90 }}>
           <color attach="background" args={["#1a1510"]} />
           <fog attach="fog" args={["#2a2520", 5, 20]} />
-          <ambientLight intensity={1} color="#d4c5a9" />
-          <pointLight position={[10, 10, 10]} intensity={1.5} color="#f4e4c1" />
+          <ambientLight intensity={0.2} color="#d4c5a9" />
+          <directionalLight 
+             position={[5, 5, 5]} 
+             intensity={3} 
+             color="#fff" 
+             castShadow 
+             shadow-mapSize={[1024, 1024]} 
+          />
+          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#f4e4c1" />
 
           {dataState === "ok" && selectedNeo && (
             <group>
@@ -262,7 +286,8 @@ export default function NeoCom() {
                 fade
                 speed={1}
               />
-              <Asteroid asteroid={selectedNeo} />
+              {/* <Asteroid asteroid={selectedNeo} /> */}
+              <Head modelUrl={headModel} />
             </group>
           )}
 
